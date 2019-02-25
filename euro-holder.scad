@@ -1,7 +1,7 @@
 // Euro Cylinder Lock Holder
 // Useful for impressioning, picking
 // (C) 2018 Matt Burrough
-// v. 6.0
+// v. 7.0
 
 // Units = mm
 
@@ -47,8 +47,12 @@ difference(){
         cylinder(h=actuatorLength, r1=actuatorRadius, r2=actuatorRadius, center=true);   
     
     // Slot for actuator insertion while locked
-    translate([blockX/2-(keywayRadius*2+6)/2, bottomOffset+12.5, 0])
-        cube([keywayRadius*2+6, 11, blockZ/2-actuatorLength/2]);
+    //translate([blockX/2-(keywayRadius*2+6)/2, bottomOffset+12.5, 0])
+        //cube([keywayRadius*2+6, 11, blockZ/2-actuatorLength/2]);
+    translate([blockX/2-(keywayRadius*2)/2, bottomOffset+12.5, 0])
+        cylinder(h=blockZ/2-actuatorLength/2, r1=7, r2=7);
+    translate([blockX/2+(keywayRadius*2)/2, bottomOffset+12.5, 0])
+        cylinder(h=blockZ/2-actuatorLength/2, r1=7, r2=7);
     
         
     // Mounting Screw hole
