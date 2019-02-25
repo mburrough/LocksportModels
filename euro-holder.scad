@@ -1,7 +1,7 @@
 // Euro Cylinder Lock Holder
 // Useful for impressioning, picking
 // (C) 2018 Matt Burrough
-// v. 7.1 (7A)
+// v. 7.6 (7F)
 
 // Units = mm
 
@@ -9,13 +9,30 @@ blockZ = 59;
 blockX = 46;
 blockY = 56;
 
-keywayRadius = 8.75;
+//** REV7AB: 0.1mm clearance from nominal at each inside face, centered actuator box and moved it higher, made prisms bigger to avoid overhang
+//** REV7AC: 0.15mm clearance from nominal at each inside face, moving the bottom edge of the actuator insertion box down a bit for more clearance near the sleeve
+//** REV7AD: even more clearance for cylinder height, probably to account for extra filament being deposited by printing the bridge closure without support.
+//** REV7AE: even more clearance needed to account for machine non-straightness and unexpectedly larger size of other cylinders (+1mm on each edge that touches the cylinder)
+//** REV7AF: moving the screw mounting hole down a bit so it aligns with the thread of an inserted core.
+
+//keywayRadius = 8.75;    //*** REV 7A (8.5 nominal, actual core measures 8.4)
+//keywayRadius = 8.6;    //*** REV 7AB
+//keywayRadius = 8.65;    //*** REV 7AC
+keywayRadius = 8.75;    //*** REV 7AE
 
 actuatorLength = 12;
 actuatorRadius = 16;
 
-profileRadius = 5.5;
-profileHeight = 34;
+//profileRadius = 5.5;   //*** REV 7A (5.0 nominal, actual core measures 4.9)
+//profileRadius = 5.5;   //*** REV 7AB
+//profileRadius = 5.15;   //*** REV 7AC
+profileRadius = 5.25;   //*** REV 7AE
+
+//profileHeight = 34;    //*** REV 7A (33.0 nominal, actual core measures 32.9 at highest mutilated spot, probably machined to 32.8)
+//profileHeight = 33.2;    //*** REV 7AB
+//profileHeight = 33.3;    //*** REV 7AC
+//profileHeight = 33.5;    //*** REV 7AD
+profileHeight = 33.7;    //*** REV 7AE
 
 M5ScrewR = 6/2;
 M5ScrewHeadLen = 5;
@@ -75,20 +92,32 @@ difference(){
     
     // Slot for actuator insertion while locked
     difference() {
-        translate([blockX/2-(keywayRadius*2+8)/2, bottomOffset+12.5, 0])
-        cube([keywayRadius*2+6, 12, blockZ/2-actuatorLength/2]);
-        translate([blockX/2-(keywayRadius*2+8)/2, bottomOffset+18.5, blockZ/2-actuatorLength/2])
-        rotate(90,[0,1,0])
-        prism(blockZ/2-actuatorLength/2, 6, 6);
+        //translate([blockX/2-(keywayRadius*2+8)/2, bottomOffset+12.5, 0])   //*** Rev 7AA
+        //translate([blockX/2-(keywayRadius*2+6)/2, bottomOffset+12.5+2, 0])  //*** Rev 7AB: centering box, and moving it up a bit to avoid overhang
+        translate([blockX/2-(keywayRadius*2+6)/2, bottomOffset+12.5+1, 0])  //***Rev 7AC: making box a bit higher and moving it down by the same amount, for better actuator clearance near the sleeve
+        //cube([keywayRadius*2+6, 11, blockZ/2-actuatorLength/2]);  //***Rev 7AA
+        cube([keywayRadius*2+6, 12, blockZ/2-actuatorLength/2]);  //***Rev 7AC: making box a bit higher and moving it down by the same amount, for better actuator clearance near the sleeve
         
-        translate([blockX/2+(keywayRadius*2+8)/2, bottomOffset+18.5, 0])
+        //** the prisms were a bit too small and also offset too far, i think.
+        //translate([blockX/2-(keywayRadius*2+8)/2, bottomOffset+18.5, blockZ/2-actuatorLength/2]) //*** Rev 7AA
+        translate([blockX/2-(keywayRadius*2+7)/2, bottomOffset+18.5, blockZ/2-actuatorLength/2])  //*** Rev 7AB: move prisms further out 
+        rotate(90,[0,1,0])
+        //prism(blockZ/2-actuatorLength/2, 6, 6);  //*** REV 7AA
+        prism(blockZ/2-actuatorLength/2, 8, 8);  //*** REV 7AB: make prisms bigger to avoid overhang
+        
+        //** the prisms had the correct width, but the offset was wrong so they didn't go in the right spot. 
+        //translate([blockX/2+(keywayRadius*2+8)/2, bottomOffset+18.5, 0])  //*** REV 7AA
+        translate([blockX/2+(keywayRadius*2+7)/2, bottomOffset+18.5, 0])  //*** Rev 7AB: move prisms further out
         rotate(270,[0,1,0])
-        prism(blockZ/2-actuatorLength/2, 6, 6);
+        //prism(blockZ/2-actuatorLength/2, 8, 8);  //*** Rev 7AA
+        prism(blockZ/2-actuatorLength/2, 8, 8);  //*** REV 7AB: make prisms bigger to avoid overhang
     }
+
     
         
     // Mounting Screw hole
-    translate([-2, profileHeight+bottomOffset-profileRadius,(blockZ/2)])
+    //translate([-2, profileHeight+bottomOffset-profileRadius,(blockZ/2)])
+    translate([-2, profileHeight+bottomOffset-profileRadius-1,(blockZ/2)])  //*** REV 7AF: moving the hole down a notch
         rotate(180, [1,0,1])
             cylinder(h=blockX+4, r1=M5ScrewR, r2=M5ScrewR, center=false);
     
@@ -108,8 +137,8 @@ difference(){
 //rotate(90,[1,0,0])
 //cube([blockX+1,blockY+2,blockZ-6]);
 
-// Side half
-//translate([blockX/2,1,0])
+// Rear Slice  //*** Rev 7AA: an upright slice of the rear profile for fitting. 
+//translate([0,-5,0])
 //rotate(90,[1,0,0])
-//cube([blockX/2,blockY+2,blockZ+1]);
+//cube([blockX,blockY+2,blockZ+1]);
 }
